@@ -17,6 +17,8 @@ import {
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 import { fetchProducts } from "../services/api";
 
+import EditableField from "./EditableField.js";
+
 const ProductList = () => {
   const [expanded, setExpanded] = useState(false);
   const [products, setProducts] = useState([]);
@@ -64,6 +66,13 @@ const ProductList = () => {
     />
   );
 
+  const handleEditSave = (field, value, productId) => {
+    // Implement logic to save the edited content to local storage or perform other actions
+    // For example, you can update the state or save to local storage here
+    // This is a placeholder and needs to be customized based on your requirements
+    console.log(`Save ${field} for product ${productId}: ${value}`);
+  };
+
   return (
     <TableContainer component={Paper}>
       <Table>
@@ -99,11 +108,28 @@ const ProductList = () => {
                       alt={product.title}
                       style={{ width: "30px", marginRight: "10px" }}
                     />
-                    <Typography>{product.title}</Typography>
-
+                    <Typography>
+                      <EditableField
+                        onSave={(value) =>
+                          handleEditSave("title", value, product.id)
+                        }
+                      >
+                        {product.title}
+                      </EditableField>
+                    </Typography>
                     <div>{product.active ? "Yes" : "No"}</div>
                   </AccordionSummary>
                   <AccordionDetails>
+                    <div>
+                      <EditableField
+                        onSave={(value) =>
+                          handleEditSave("description", value, product.id)
+                        }
+                      >
+                        {product.description}
+                      </EditableField>
+                    </div>
+
                     <div>
                       <Typography>{product.primary_variant_name}s</Typography>
                       <ul>
@@ -112,9 +138,32 @@ const ProductList = () => {
                             <Accordion>
                               <AccordionSummary>
                                 <div>
-                                  <Typography>{variant.name}</Typography>
                                   <Typography>
-                                    ${variant.price} ({variant.inventory} left)
+                                    <EditableField
+                                      onSave={(value) =>
+                                        handleEditSave(
+                                          "primary_variant",
+                                          value,
+                                          product.id
+                                        )
+                                      }
+                                    >
+                                      {variant.name}
+                                    </EditableField>
+                                  </Typography>
+                                  <Typography>
+                                    <EditableField
+                                      onSave={(value) =>
+                                        handleEditSave(
+                                          "price",
+                                          value,
+                                          product.id
+                                        )
+                                      }
+                                    >
+                                      ${variant.price} ({variant.inventory}{" "}
+                                      left)
+                                    </EditableField>
                                   </Typography>
                                 </div>
                               </AccordionSummary>
@@ -126,9 +175,41 @@ const ProductList = () => {
                                   {variant.secondary_variants.map(
                                     (secondaryVariant) => (
                                       <li key={secondaryVariant.name}>
-                                        {secondaryVariant.name}: $
-                                        {secondaryVariant.price} (
-                                        {secondaryVariant.inventory} left)
+                                        <EditableField
+                                          onSave={(value) =>
+                                            handleEditSave(
+                                              "secondary_variant",
+                                              value,
+                                              product.id
+                                            )
+                                          }
+                                        >
+                                          {secondaryVariant.name}
+                                        </EditableField>
+                                        : $
+                                        <EditableField
+                                          onSave={(value) =>
+                                            handleEditSave(
+                                              "secondary_variant_price",
+                                              value,
+                                              product.id
+                                            )
+                                          }
+                                        >
+                                          {secondaryVariant.price} (
+                                          <EditableField
+                                            onSave={(value) =>
+                                              handleEditSave(
+                                                "secondary_variant_inventory",
+                                                value,
+                                                product.id
+                                              )
+                                            }
+                                          >
+                                            {secondaryVariant.inventory} left
+                                          </EditableField>
+                                          )
+                                        </EditableField>
                                       </li>
                                     )
                                   )}
@@ -142,8 +223,22 @@ const ProductList = () => {
                   </AccordionDetails>
                 </Accordion>
               </TableCell>
-              <TableCell>${product.price}</TableCell>
-              <TableCell>{product.discountPercentage}%</TableCell>
+              <TableCell>
+                <EditableField
+                  onSave={(value) => handleEditSave("price", value, product.id)}
+                >
+                  ${product.price}
+                </EditableField>
+              </TableCell>
+              <TableCell>
+                <EditableField
+                  onSave={(value) =>
+                    handleEditSave("discountPercentage", value, product.id)
+                  }
+                >
+                  {product.discountPercentage}%
+                </EditableField>
+              </TableCell>
               <TableCell>
                 {product.primary_variants.map((variant) =>
                   mapColor(variant.name)
@@ -155,8 +250,24 @@ const ProductList = () => {
                     .map((sizeVariant) => mapSize(sizeVariant.name))
                     .join(", ")}
               </TableCell>
-              <TableCell>{product.inventory}</TableCell>
-              <TableCell>{product.leadTime}</TableCell>
+              <TableCell>
+                <EditableField
+                  onSave={(value) =>
+                    handleEditSave("inventory", value, product.id)
+                  }
+                >
+                  {product.inventory}
+                </EditableField>
+              </TableCell>
+              <TableCell>
+                <EditableField
+                  onSave={(value) =>
+                    handleEditSave("leadTime", value, product.id)
+                  }
+                >
+                  {product.leadTime}
+                </EditableField>
+              </TableCell>
             </TableRow>
           ))}
         </TableBody>
