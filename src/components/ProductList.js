@@ -45,7 +45,7 @@ const ProductList = () => {
             <TableCell>Title</TableCell>
             <TableCell>Category</TableCell>
             <TableCell>Price</TableCell>
-            <TableCell>Discount Percentage</TableCell>
+            <TableCell>Discount %</TableCell>
             <TableCell>Inventory</TableCell>
             <TableCell>Active</TableCell>
             <TableCell>Lead Time</TableCell>
@@ -85,33 +85,29 @@ const ProductList = () => {
                                 <Typography>
                                   {variant.price}, {variant.inventory}
                                 </Typography>
+                                <Typography>Secondary Variants:</Typography>
+                                <ul>
+                                  {variant.secondary_variants.map(
+                                    (secondaryVariant) => (
+                                      <li key={secondaryVariant.name}>
+                                        {secondaryVariant.name}:{" "}
+                                        {secondaryVariant.price},{" "}
+                                        {secondaryVariant.inventory}
+                                      </li>
+                                    )
+                                  )}
+                                </ul>
                               </AccordionDetails>
                             </Accordion>
                           </li>
                         ))}
                       </ul>
                     </div>
-                    <div>
-                      <Typography>Secondary Variants:</Typography>
-                      <ul>
-                        {product.secondary_variants
-                          ? product.secondary_variants.map(
-                              (secondaryVariant) => (
-                                <li key={secondaryVariant.name}>
-                                  {secondaryVariant.name}:{" "}
-                                  {secondaryVariant.price},{" "}
-                                  {secondaryVariant.inventory}
-                                </li>
-                              )
-                            )
-                          : null}
-                      </ul>
-                    </div>
                   </AccordionDetails>
                 </Accordion>
               </TableCell>
               <TableCell>{product.category}</TableCell>
-              <TableCell>{product.price}</TableCell>
+              <TableCell>${product.price}</TableCell>
               <TableCell>{product.discountPercentage}</TableCell>
               <TableCell>{product.inventory}</TableCell>
               <TableCell>{product.active ? "Yes" : "No"}</TableCell>
