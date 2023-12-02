@@ -33,11 +33,55 @@ const ProductList = () => {
 
   const fetchProductData = async () => {
     try {
-      const products = await fetchProducts();
+      // Check if there is edited data in local storage
+      const editedData = getEditedDataFromLocalStorage();
+
+      // If there is edited data, use it; otherwise, fetch from the API
+      const apiData = await fetchProducts();
+      const products = Object.keys(editedData).length
+        ? mergeEditedDataWithApiData(apiData, editedData)
+        : apiData;
+
       setProducts(products);
     } catch (error) {
       console.error("Error fetching data:", error);
     }
+  };
+
+  // Function to merge edited data with API data
+  const mergeEditedDataWithApiData = (apiData, editedData) => {
+    const mergedData = apiData.map((product) => {
+      const editedProductData = editedData[product.id] || {};
+      return {
+        ...product,
+        ...editedProductData,
+      };
+    });
+    return mergedData;
+  };
+
+  // Function to get the edited data from local storage
+  const getEditedDataFromLocalStorage = () => {
+    const editedData = localStorage.getItem("editedData");
+    return editedData ? JSON.parse(editedData) : {};
+  };
+
+  // Function to save the edited data to local storage
+  const saveEditedDataToLocalStorage = (productId, field, value) => {
+    const editedData = getEditedDataFromLocalStorage();
+    const productData = editedData[productId] || {};
+    productData[field] = value;
+    editedData[productId] = productData;
+    localStorage.setItem("editedData", JSON.stringify(editedData));
+  };
+
+  // Function to handle the save action for editable fields
+  const handleEditSave = (field, value, productId) => {
+    // Save changes to local storage
+    saveEditedDataToLocalStorage(productId, field, value);
+
+    // Other logic to update state or perform additional actions if needed
+    console.log(`Save ${field} for product ${productId}: ${value}`);
   };
 
   // Mapping function for sizes
@@ -65,13 +109,6 @@ const ProductList = () => {
       }}
     />
   );
-
-  const handleEditSave = (field, value, productId) => {
-    // Implement logic to save the edited content to local storage or perform other actions
-    // For example, you can update the state or save to local storage here
-    // This is a placeholder and needs to be customized based on your requirements
-    console.log(`Save ${field} for product ${productId}: ${value}`);
-  };
 
   return (
     <TableContainer component={Paper}>
@@ -233,11 +270,16 @@ const ProductList = () => {
                 </Accordion>
               </TableCell>
               <TableCell>
-                <EditableField
-                  onSave={(value) => handleEditSave("price", value, product.id)}
-                >
-                  ${product.price}
-                </EditableField>
+                <span>
+                  $
+                  <EditableField
+                    onSave={(value) =>
+                      handleEditSave("price", value, product.id)
+                    }
+                  >
+                    {product.price}
+                  </EditableField>
+                </span>
               </TableCell>
               <TableCell>
                 <EditableField
