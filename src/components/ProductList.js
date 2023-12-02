@@ -12,6 +12,7 @@ import {
   AccordionDetails,
   AccordionSummary,
   Typography,
+  Box,
 } from "@mui/material";
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 import { fetchProducts } from "../services/api";
@@ -37,35 +38,52 @@ const ProductList = () => {
     }
   };
 
-  // Function to extract colors from primary variants
-  const getColors = (variants) =>
-    variants.map((variant) => variant.name).join(", ");
+  // Mapping function for sizes
+  const mapSize = (size) => {
+    const sizeMap = {
+      Small: "S",
+      Medium: "M",
+      Large: "L",
+      "Extra Large": "XL",
+    };
+    return sizeMap[size] || size;
+  };
 
-  // Function to extract sizes from secondary variants of the first primary variant
-  const getSizes = (variants) =>
-    variants.length > 0
-      ? variants[0].secondary_variants.map((size) => size.name).join(", ")
-      : "";
+  // Mapping function for colors
+  const mapColor = (color) => (
+    <Box
+      key={color}
+      sx={{
+        width: 20,
+        height: 20,
+        borderRadius: "50%",
+        backgroundColor: color,
+        marginRight: 0.5,
+        display: "inline-block",
+      }}
+    />
+  );
 
   return (
     <TableContainer component={Paper}>
       <Table>
         <TableHead>
           <TableRow>
-            <TableCell>Title</TableCell>
             <TableCell>Category</TableCell>
-            <TableCell>Price</TableCell>
+            <TableCell>Title</TableCell>
+            <TableCell>WHS</TableCell>
             <TableCell>Discount %</TableCell>
-            <TableCell>Inventory</TableCell>
-            <TableCell>Active</TableCell>
-            <TableCell>Lead Time</TableCell>
-            <TableCell>Color</TableCell>
+            <TableCell>Colors</TableCell>
             <TableCell>Sizes</TableCell>
+            <TableCell>Inventory</TableCell>
+            <TableCell>Lead Time</TableCell>
           </TableRow>
         </TableHead>
         <TableBody>
           {products.map((product) => (
             <TableRow key={product.id}>
+              <TableCell>{product.category}</TableCell>
+
               <TableCell>
                 <Accordion
                   expanded={expanded === `panel${product.id}`}
@@ -82,29 +100,35 @@ const ProductList = () => {
                       style={{ width: "30px", marginRight: "10px" }}
                     />
                     <Typography>{product.title}</Typography>
+
+                    <div>{product.active ? "Yes" : "No"}</div>
                   </AccordionSummary>
                   <AccordionDetails>
                     <div>
-                      <Typography>Primary Variants:</Typography>
+                      <Typography>{product.primary_variant_name}s</Typography>
                       <ul>
                         {product.primary_variants.map((variant) => (
                           <li key={variant.name}>
                             <Accordion>
                               <AccordionSummary>
-                                <Typography>{variant.name}</Typography>
+                                <div>
+                                  <Typography>{variant.name}</Typography>
+                                  <Typography>
+                                    ${variant.price} ({variant.inventory} left)
+                                  </Typography>
+                                </div>
                               </AccordionSummary>
                               <AccordionDetails>
                                 <Typography>
-                                  {variant.price}, {variant.inventory}
+                                  {product.secondary_variant_name}s
                                 </Typography>
-                                <Typography>Secondary Variants:</Typography>
                                 <ul>
                                   {variant.secondary_variants.map(
                                     (secondaryVariant) => (
                                       <li key={secondaryVariant.name}>
-                                        {secondaryVariant.name}:{" "}
-                                        {secondaryVariant.price},{" "}
-                                        {secondaryVariant.inventory}
+                                        {secondaryVariant.name}: $
+                                        {secondaryVariant.price} (
+                                        {secondaryVariant.inventory} left)
                                       </li>
                                     )
                                   )}
@@ -118,14 +142,21 @@ const ProductList = () => {
                   </AccordionDetails>
                 </Accordion>
               </TableCell>
-              <TableCell>{product.category}</TableCell>
               <TableCell>${product.price}</TableCell>
               <TableCell>{product.discountPercentage}%</TableCell>
+              <TableCell>
+                {product.primary_variants.map((variant) =>
+                  mapColor(variant.name)
+                )}
+              </TableCell>
+              <TableCell>
+                {product.primary_variants.length > 0 &&
+                  product.primary_variants[0].secondary_variants
+                    .map((sizeVariant) => mapSize(sizeVariant.name))
+                    .join(", ")}
+              </TableCell>
               <TableCell>{product.inventory}</TableCell>
-              <TableCell>{product.active ? "Yes" : "No"}</TableCell>
               <TableCell>{product.leadTime}</TableCell>
-              <TableCell>{getColors(product.primary_variants)}</TableCell>
-              <TableCell>{getSizes(product.primary_variants)}</TableCell>
             </TableRow>
           ))}
         </TableBody>
