@@ -192,7 +192,7 @@ const ProductList = () => {
                                     <EditableField
                                       onSave={(value) =>
                                         handleEditSave(
-                                          "price",
+                                          "primary_variant_price",
                                           value,
                                           product.id
                                         )
@@ -203,7 +203,7 @@ const ProductList = () => {
                                     <EditableField
                                       onSave={(value) =>
                                         handleEditSave(
-                                          "inventory",
+                                          "primary_variant_inventory",
                                           value,
                                           product.id
                                         )
@@ -274,7 +274,7 @@ const ProductList = () => {
                   $
                   <EditableField
                     onSave={(value) =>
-                      handleEditSave("price", value, product.id)
+                      handleEditSave("total_price", value, product.id)
                     }
                   >
                     {product.price}
