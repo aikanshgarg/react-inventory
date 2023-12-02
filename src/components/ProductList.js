@@ -161,8 +161,18 @@ const ProductList = () => {
                                         )
                                       }
                                     >
-                                      ${variant.price} ({variant.inventory}{" "}
-                                      left)
+                                      {`$${variant.price}`}
+                                    </EditableField>
+                                    <EditableField
+                                      onSave={(value) =>
+                                        handleEditSave(
+                                          "inventory",
+                                          value,
+                                          product.id
+                                        )
+                                      }
+                                    >
+                                      ({variant.inventory} left)
                                     </EditableField>
                                   </Typography>
                                 </div>
@@ -186,7 +196,7 @@ const ProductList = () => {
                                         >
                                           {secondaryVariant.name}
                                         </EditableField>
-                                        : $
+                                        :
                                         <EditableField
                                           onSave={(value) =>
                                             handleEditSave(
@@ -196,19 +206,18 @@ const ProductList = () => {
                                             )
                                           }
                                         >
-                                          {secondaryVariant.price} (
-                                          <EditableField
-                                            onSave={(value) =>
-                                              handleEditSave(
-                                                "secondary_variant_inventory",
-                                                value,
-                                                product.id
-                                              )
-                                            }
-                                          >
-                                            {secondaryVariant.inventory} left
-                                          </EditableField>
-                                          )
+                                          {`$${secondaryVariant.price}`}
+                                        </EditableField>
+                                        <EditableField
+                                          onSave={(value) =>
+                                            handleEditSave(
+                                              "secondary_variant_inventory",
+                                              value,
+                                              product.id
+                                            )
+                                          }
+                                        >
+                                          ({secondaryVariant.inventory} left)
                                         </EditableField>
                                       </li>
                                     )
