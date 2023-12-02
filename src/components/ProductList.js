@@ -37,6 +37,16 @@ const ProductList = () => {
     }
   };
 
+  // Function to extract colors from primary variants
+  const getColors = (variants) =>
+    variants.map((variant) => variant.name).join(", ");
+
+  // Function to extract sizes from secondary variants of the first primary variant
+  const getSizes = (variants) =>
+    variants.length > 0
+      ? variants[0].secondary_variants.map((size) => size.name).join(", ")
+      : "";
+
   return (
     <TableContainer component={Paper}>
       <Table>
@@ -49,6 +59,8 @@ const ProductList = () => {
             <TableCell>Inventory</TableCell>
             <TableCell>Active</TableCell>
             <TableCell>Lead Time</TableCell>
+            <TableCell>Color</TableCell>
+            <TableCell>Sizes</TableCell>
           </TableRow>
         </TableHead>
         <TableBody>
@@ -108,10 +120,12 @@ const ProductList = () => {
               </TableCell>
               <TableCell>{product.category}</TableCell>
               <TableCell>${product.price}</TableCell>
-              <TableCell>{product.discountPercentage}</TableCell>
+              <TableCell>{product.discountPercentage}%</TableCell>
               <TableCell>{product.inventory}</TableCell>
               <TableCell>{product.active ? "Yes" : "No"}</TableCell>
               <TableCell>{product.leadTime}</TableCell>
+              <TableCell>{getColors(product.primary_variants)}</TableCell>
+              <TableCell>{getSizes(product.primary_variants)}</TableCell>
             </TableRow>
           ))}
         </TableBody>
