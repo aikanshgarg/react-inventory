@@ -19,7 +19,7 @@ import { fetchProducts } from "../services/api";
 
 import EditableField from "./EditableField.js";
 
-const ProductList = () => {
+const ProductList1 = () => {
   const [expanded, setExpanded] = useState(false);
   const [products, setProducts] = useState([]);
 
@@ -33,14 +33,17 @@ const ProductList = () => {
 
   const fetchProductData = async () => {
     try {
-      // Check if there is edited data in local storage
-      const editedData = getEditedDataFromLocalStorage();
+      // Check if there is original data in local storage
+      const originalData = getOriginalDataFromLocalStorage();
 
-      // If there is edited data, use it; otherwise, fetch from the API
+      // If there is original data, use it; otherwise, fetch from the API
       const apiData = await fetchProducts();
-      const products = Object.keys(editedData).length
-        ? mergeEditedDataWithApiData(apiData, editedData)
+      const products = originalData.length
+        ? updateOriginalDataWithApiData(apiData, originalData)
         : apiData;
+
+      // Save the initial data to local storage
+      saveOriginalDataToLocalStorage(apiData);
 
       setProducts(products);
     } catch (error) {
@@ -48,49 +51,28 @@ const ProductList = () => {
     }
   };
 
-  const mergeEditedDataWithApiData = (apiData, editedData) => {
-    const mergedData = apiData.map((product) => {
-      const editedProductData = editedData[product.id] || {};
-
-      const mergedProduct = {
-        ...product,
-        ...editedProductData,
-        primary_variants: product.primary_variants.map((variant) => {
-          const variantName = variant.name.toLowerCase();
-          const editedVariantData = editedProductData[variantName] || {};
-
-          return {
-            ...variant,
-            ...editedVariantData,
-            secondary_variants: variant.secondary_variants.map(
-              (secondaryVariant) => {
-                const secondaryVariantName =
-                  secondaryVariant.name.toLowerCase();
-                const editedSecondaryVariantData =
-                  editedVariantData[secondaryVariantName] || {};
-
-                return {
-                  ...secondaryVariant,
-                  ...editedSecondaryVariantData,
-                };
-              }
-            ),
-          };
-        }),
-      };
-
-      return mergedProduct;
+  const updateOriginalDataWithApiData = (apiData, originalData) => {
+    // Update the original data with API data based on product IDs
+    const updatedData = originalData.map((originalProduct) => {
+      const apiProduct = apiData.find((p) => p.id === originalProduct.id) || {};
+      return { ...apiProduct, ...originalProduct };
     });
 
-    return mergedData;
+    return updatedData;
   };
 
-  // Function to get the edited data from local storage
-  const getEditedDataFromLocalStorage = () => {
-    const editedData = localStorage.getItem("editedData");
-    return editedData ? JSON.parse(editedData) : {};
+  // Function to get the original data from local storage
+  const getOriginalDataFromLocalStorage = () => {
+    const originalData = localStorage.getItem("originalData");
+    return originalData ? JSON.parse(originalData) : [];
   };
 
+  // Function to save the initial data to local storage
+  const saveOriginalDataToLocalStorage = (data) => {
+    localStorage.setItem("originalData", JSON.stringify(data));
+  };
+
+  // Function to save the edited data to local storage
   const saveEditedDataToLocalStorage = (
     productId,
     field,
@@ -98,76 +80,52 @@ const ProductList = () => {
     variantName,
     secondaryVariantName
   ) => {
-    const editedData = getEditedDataFromLocalStorage();
-    const productData = editedData[productId] || {};
+    // Get the edited data from local storage
+    const editedData = getOriginalDataFromLocalStorage();
 
-    if (!variantName) {
-      // If the field is not related to variants, store it directly in productData
-      productData[field] = value;
-    } else {
-      // Check if the primary_variants key exists, if not, create it as an array
-      productData.primary_variants = productData.primary_variants || [];
+    // Find the product in the array
+    const productIndex = editedData.findIndex((p) => p.id === productId);
 
-      // Find the index of the variant in the array or return -1
-      const variantIndex = productData.primary_variants.findIndex(
-        (v) => v.name === variantName
-      );
+    if (productIndex !== -1) {
+      const product = editedData[productIndex];
 
-      if (variantIndex === -1) {
-        // If the variant is not found, push a new object with the name
-        const newVariant = {
-          name: variantName,
-          secondary_variants: [],
-        };
-        productData.primary_variants.push(newVariant);
+      if (!variantName) {
+        // If the field is not related to variants, update it directly in the product
+        product[field] = value;
       } else {
-        // If there are secondary variants in the next index, copy them over
-        if (variantIndex < productData.primary_variants.length - 1) {
-          productData.primary_variants[variantIndex].secondary_variants =
-            productData.primary_variants[variantIndex + 1].secondary_variants;
-
-          // Remove the next index
-          productData.primary_variants.splice(variantIndex + 1, 1);
-        }
-      }
-
-      // Find the index of the primary variant in the array
-      const primaryVariantIndex = productData.primary_variants.findIndex(
-        (v) => v.name === variantName
-      );
-
-      // If secondaryVariantName is not provided, it means the primary variant itself is being edited
-      if (!secondaryVariantName) {
-        // Update the name of the primary variant
-        productData.primary_variants[primaryVariantIndex].name = value;
-      } else {
-        // Find the index of the secondary variant in the array or return -1
-        const secondaryVariantIndex = productData.primary_variants[
-          primaryVariantIndex
-        ].secondary_variants.findIndex(
-          (sv) => sv.name === secondaryVariantName
+        // Find the variant index in primary_variants array
+        const variantIndex = product.primary_variants.findIndex(
+          (v) => v.name === variantName
         );
 
-        if (secondaryVariantIndex === -1) {
-          // If the secondary variant is not found, push a new object with the name and field
-          const newSecondaryVariant = {
-            name: secondaryVariantName,
-            [field]: value,
-          };
-          productData.primary_variants[
-            primaryVariantIndex
-          ].secondary_variants.push(newSecondaryVariant);
-        } else {
-          // If the secondary variant is found, update the field in the existing object
-          productData.primary_variants[primaryVariantIndex].secondary_variants[
-            secondaryVariantIndex
-          ][field] = value;
+        if (variantIndex !== -1) {
+          if (!secondaryVariantName) {
+            // If no secondaryVariantName, update the primary variant name
+            product.primary_variants[variantIndex].name = value;
+          } else {
+            // Find the secondary variant index in secondary_variants array
+            const secondaryVariantIndex = product.primary_variants[
+              variantIndex
+            ].secondary_variants.findIndex(
+              (sv) => sv.name === secondaryVariantName
+            );
+
+            if (secondaryVariantIndex !== -1) {
+              // Update the field in the secondary variant
+              product.primary_variants[variantIndex].secondary_variants[
+                secondaryVariantIndex
+              ][field] = value;
+            }
+          }
         }
       }
-    }
 
-    editedData[productId] = productData;
-    localStorage.setItem("editedData", JSON.stringify(editedData));
+      // Update the product in the array
+      editedData[productIndex] = product;
+
+      // Save the edited data back to local storage
+      localStorage.setItem("originalData", JSON.stringify(editedData));
+    }
   };
 
   // Function to handle the save action for editable fields
@@ -454,4 +412,4 @@ const ProductList = () => {
   );
 };
 
-export default ProductList;
+export default ProductList1;
