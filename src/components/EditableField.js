@@ -38,7 +38,9 @@ const EditableField = ({ onSave, children }) => {
       ) : (
         <>
           <span>{editedContent}</span>
-          <button onClick={handleEditClick}>Edit</button>
+          <button onClick={handleEditClick} style={{ display: "none" }}>
+            Edit
+          </button>
         </>
       )}
     </div>

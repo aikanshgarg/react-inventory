@@ -1,4 +1,3 @@
-// src/components/ProductList.js
 import React, { useState, useEffect } from "react";
 import {
   Table,
@@ -15,7 +14,7 @@ import {
   Box,
 } from "@mui/material";
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
-import { fetchProducts } from "../services/api";
+import { fetchProducts } from "../services/api.js";
 
 import EditableField from "./EditableField.js";
 
@@ -33,62 +32,39 @@ const ProductList = () => {
 
   const fetchProductData = async () => {
     try {
-      // Check if there is edited data in local storage
-      const editedData = getEditedDataFromLocalStorage();
+      // Check if there is data in local storage
+      const storedData = getStoredDataFromLocalStorage();
 
-      // If there is edited data, use it; otherwise, fetch from the API
+      // If there is data, use it; otherwise, fetch from the API
       const apiData = await fetchProducts();
-      const products = Object.keys(editedData).length
-        ? mergeEditedDataWithApiData(apiData, editedData)
-        : apiData;
+      const updatedData = mergeApiAndStoredData(apiData, storedData);
 
-      setProducts(products);
+      // Save the data to local storage
+      saveDataToLocalStorage(updatedData);
+
+      setProducts(updatedData);
     } catch (error) {
       console.error("Error fetching data:", error);
     }
   };
 
-  const mergeEditedDataWithApiData = (apiData, editedData) => {
-    const mergedData = apiData.map((product) => {
-      const editedProductData = editedData[product.id] || {};
+  const mergeApiAndStoredData = (apiData, storedData) => {
+    return apiData.map((apiProduct) => {
+      const storedProduct = storedData.find(
+        (storedProduct) => storedProduct.id === apiProduct.id
+      );
 
-      const mergedProduct = {
-        ...product,
-        ...editedProductData,
-        primary_variants: product.primary_variants.map((variant) => {
-          const variantName = variant.name.toLowerCase();
-          const editedVariantData = editedProductData[variantName] || {};
-
-          return {
-            ...variant,
-            ...editedVariantData,
-            secondary_variants: variant.secondary_variants.map(
-              (secondaryVariant) => {
-                const secondaryVariantName =
-                  secondaryVariant.name.toLowerCase();
-                const editedSecondaryVariantData =
-                  editedVariantData[secondaryVariantName] || {};
-
-                return {
-                  ...secondaryVariant,
-                  ...editedSecondaryVariantData,
-                };
-              }
-            ),
-          };
-        }),
-      };
-
-      return mergedProduct;
+      return storedProduct ? { ...apiProduct, ...storedProduct } : apiProduct;
     });
-
-    return mergedData;
   };
 
-  // Function to get the edited data from local storage
-  const getEditedDataFromLocalStorage = () => {
-    const editedData = localStorage.getItem("editedData");
-    return editedData ? JSON.parse(editedData) : {};
+  const getStoredDataFromLocalStorage = () => {
+    const storedData = localStorage.getItem("storedData");
+    return storedData ? JSON.parse(storedData) : [];
+  };
+
+  const saveDataToLocalStorage = (data) => {
+    localStorage.setItem("storedData", JSON.stringify(data));
   };
 
   const saveEditedDataToLocalStorage = (
@@ -98,76 +74,52 @@ const ProductList = () => {
     variantName,
     secondaryVariantName
   ) => {
-    const editedData = getEditedDataFromLocalStorage();
-    const productData = editedData[productId] || {};
+    // Get the data from local storage
+    const storedData = getStoredDataFromLocalStorage();
 
-    if (!variantName) {
-      // If the field is not related to variants, store it directly in productData
-      productData[field] = value;
-    } else {
-      // Check if the primary_variants key exists, if not, create it as an array
-      productData.primary_variants = productData.primary_variants || [];
+    // Find the product in the array
+    const productIndex = storedData.findIndex((p) => p.id === productId);
 
-      // Find the index of the variant in the array or return -1
-      const variantIndex = productData.primary_variants.findIndex(
-        (v) => v.name === variantName
-      );
+    if (productIndex !== -1) {
+      const product = storedData[productIndex];
 
-      if (variantIndex === -1) {
-        // If the variant is not found, push a new object with the name
-        const newVariant = {
-          name: variantName,
-          secondary_variants: [],
-        };
-        productData.primary_variants.push(newVariant);
+      if (!variantName) {
+        // If the field is not related to variants, update it directly in the product
+        product[field] = value;
       } else {
-        // If there are secondary variants in the next index, copy them over
-        if (variantIndex < productData.primary_variants.length - 1) {
-          productData.primary_variants[variantIndex].secondary_variants =
-            productData.primary_variants[variantIndex + 1].secondary_variants;
-
-          // Remove the next index
-          productData.primary_variants.splice(variantIndex + 1, 1);
-        }
-      }
-
-      // Find the index of the primary variant in the array
-      const primaryVariantIndex = productData.primary_variants.findIndex(
-        (v) => v.name === variantName
-      );
-
-      // If secondaryVariantName is not provided, it means the primary variant itself is being edited
-      if (!secondaryVariantName) {
-        // Update the name of the primary variant
-        productData.primary_variants[primaryVariantIndex].name = value;
-      } else {
-        // Find the index of the secondary variant in the array or return -1
-        const secondaryVariantIndex = productData.primary_variants[
-          primaryVariantIndex
-        ].secondary_variants.findIndex(
-          (sv) => sv.name === secondaryVariantName
+        // Find the variant index in primary_variants array
+        const variantIndex = product.primary_variants.findIndex(
+          (v) => v.name === variantName
         );
 
-        if (secondaryVariantIndex === -1) {
-          // If the secondary variant is not found, push a new object with the name and field
-          const newSecondaryVariant = {
-            name: secondaryVariantName,
-            [field]: value,
-          };
-          productData.primary_variants[
-            primaryVariantIndex
-          ].secondary_variants.push(newSecondaryVariant);
-        } else {
-          // If the secondary variant is found, update the field in the existing object
-          productData.primary_variants[primaryVariantIndex].secondary_variants[
-            secondaryVariantIndex
-          ][field] = value;
+        if (variantIndex !== -1) {
+          if (!secondaryVariantName) {
+            // If no secondaryVariantName, update the primary variant name
+            product.primary_variants[variantIndex].name = value;
+          } else {
+            // Find the secondary variant index in secondary_variants array
+            const secondaryVariantIndex = product.primary_variants[
+              variantIndex
+            ].secondary_variants.findIndex(
+              (sv) => sv.name === secondaryVariantName
+            );
+
+            if (secondaryVariantIndex !== -1) {
+              // Update the field in the secondary variant
+              product.primary_variants[variantIndex].secondary_variants[
+                secondaryVariantIndex
+              ][field] = value;
+            }
+          }
         }
       }
-    }
 
-    editedData[productId] = productData;
-    localStorage.setItem("editedData", JSON.stringify(editedData));
+      // Update the product in the array
+      storedData[productIndex] = product;
+
+      // Save the data back to local storage
+      saveDataToLocalStorage(storedData);
+    }
   };
 
   // Function to handle the save action for editable fields
@@ -211,6 +163,7 @@ const ProductList = () => {
         height: 20,
         borderRadius: "50%",
         backgroundColor: color,
+        border: "1px solid #0b0c22",
         marginRight: 0.5,
         display: "inline-block",
       }}
@@ -218,46 +171,53 @@ const ProductList = () => {
   );
 
   return (
-    <TableContainer component={Paper}>
+    <TableContainer component={Paper} className="table-container">
       <Table>
         <TableHead>
           <TableRow>
-            <TableCell>Category</TableCell>
-            <TableCell>Title</TableCell>
-            <TableCell>WHS</TableCell>
-            <TableCell>Discount %</TableCell>
-            <TableCell>Colors</TableCell>
-            <TableCell>Sizes</TableCell>
-            <TableCell>Inventory</TableCell>
-            <TableCell>Lead Time</TableCell>
+            <TableCell className="header">Title</TableCell>
+            <TableCell className="header">WHS</TableCell>
+            <TableCell className="header">Discount %</TableCell>
+            <TableCell className="header">Colors</TableCell>
+            <TableCell className="header">Sizes</TableCell>
+            <TableCell className="header">Inventory</TableCell>
+            <TableCell className="header">Lead Time</TableCell>
           </TableRow>
         </TableHead>
         <TableBody>
           {products.map((product) => (
             <TableRow key={product.id}>
-              <TableCell>{product.category}</TableCell>
-
-              <TableCell>
+              <TableCell style={{ width: "40%" }}>
                 <Accordion
                   expanded={expanded === `panel${product.id}`}
                   onChange={handleAccordionChange(`panel${product.id}`)}
+                  className="product-card"
                 >
                   <AccordionSummary
                     expandIcon={<ExpandMoreIcon />}
                     aria-controls={`panel${product.id}bh-content`}
                     id={`panel${product.id}bh-header`}
                   >
-                    <img
-                      src={product.image}
-                      alt={product.title}
-                      style={{
-                        width: "40px",
-                        height: "40px",
-                        borderRadius: "50%",
-                        marginRight: "10px",
-                      }}
-                    />
-                    <Typography>
+                    <div className="active-pill">
+                      {product.active ? "active" : "inactive"}
+                    </div>
+                    <div className="product-image-parent">
+                      <img
+                        src={product.image}
+                        alt={product.title}
+                        style={{
+                          width: "160px",
+                          height: "160px",
+                          objectFit: "contain",
+                          backgroundColor: "#fff",
+                          border: "1px solid #0b0c22",
+                          borderRadius: "50%",
+                        }}
+                      />
+                      <div className="category-pill">{product.category}</div>
+                    </div>
+
+                    <Typography className="product-title">
                       <EditableField
                         onSave={(value) =>
                           handleEditSave("title", value, product.id)
@@ -266,12 +226,10 @@ const ProductList = () => {
                         {product.title}
                       </EditableField>
                     </Typography>
-                    <div className="active-pill">
-                      {product.active ? "Yes" : "No"}
-                    </div>
                   </AccordionSummary>
                   <AccordionDetails>
                     <div className="description">
+                      <span>Product Description: </span>
                       <EditableField
                         onSave={(value) =>
                           handleEditSave("description", value, product.id)
@@ -282,7 +240,9 @@ const ProductList = () => {
                     </div>
 
                     <div>
-                      <Typography>{product.primary_variant_name}s</Typography>
+                      <Typography>
+                        {product.primary_variant_name} Variants:
+                      </Typography>
                       <ul>
                         {product.primary_variants.map((variant) => (
                           <li key={variant.name}>
@@ -335,7 +295,7 @@ const ProductList = () => {
                               </AccordionSummary>
                               <AccordionDetails>
                                 <Typography>
-                                  {product.secondary_variant_name}s
+                                  {product.secondary_variant_name}s Available:
                                 </Typography>
                                 <ul>
                                   {variant.secondary_variants.map(
