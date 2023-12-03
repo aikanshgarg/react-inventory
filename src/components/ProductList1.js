@@ -33,46 +33,41 @@ const ProductList1 = () => {
 
   const fetchProductData = async () => {
     try {
-      // Check if there is original data in local storage
-      const originalData = getOriginalDataFromLocalStorage();
+      // Check if there is data in local storage
+      const storedData = getStoredDataFromLocalStorage();
 
-      // If there is original data, use it; otherwise, fetch from the API
+      // If there is data, use it; otherwise, fetch from the API
       const apiData = await fetchProducts();
-      const products = originalData.length
-        ? updateOriginalDataWithApiData(apiData, originalData)
-        : apiData;
+      const updatedData = mergeApiAndStoredData(apiData, storedData);
 
-      // Save the initial data to local storage
-      saveOriginalDataToLocalStorage(apiData);
+      // Save the data to local storage
+      saveDataToLocalStorage(updatedData);
 
-      setProducts(products);
+      setProducts(updatedData);
     } catch (error) {
       console.error("Error fetching data:", error);
     }
   };
 
-  const updateOriginalDataWithApiData = (apiData, originalData) => {
-    // Update the original data with API data based on product IDs
-    const updatedData = originalData.map((originalProduct) => {
-      const apiProduct = apiData.find((p) => p.id === originalProduct.id) || {};
-      return { ...apiProduct, ...originalProduct };
+  const mergeApiAndStoredData = (apiData, storedData) => {
+    return apiData.map((apiProduct) => {
+      const storedProduct = storedData.find(
+        (storedProduct) => storedProduct.id === apiProduct.id
+      );
+
+      return storedProduct ? { ...apiProduct, ...storedProduct } : apiProduct;
     });
-
-    return updatedData;
   };
 
-  // Function to get the original data from local storage
-  const getOriginalDataFromLocalStorage = () => {
-    const originalData = localStorage.getItem("originalData");
-    return originalData ? JSON.parse(originalData) : [];
+  const getStoredDataFromLocalStorage = () => {
+    const storedData = localStorage.getItem("storedData");
+    return storedData ? JSON.parse(storedData) : [];
   };
 
-  // Function to save the initial data to local storage
-  const saveOriginalDataToLocalStorage = (data) => {
-    localStorage.setItem("originalData", JSON.stringify(data));
+  const saveDataToLocalStorage = (data) => {
+    localStorage.setItem("storedData", JSON.stringify(data));
   };
 
-  // Function to save the edited data to local storage
   const saveEditedDataToLocalStorage = (
     productId,
     field,
@@ -80,14 +75,14 @@ const ProductList1 = () => {
     variantName,
     secondaryVariantName
   ) => {
-    // Get the edited data from local storage
-    const editedData = getOriginalDataFromLocalStorage();
+    // Get the data from local storage
+    const storedData = getStoredDataFromLocalStorage();
 
     // Find the product in the array
-    const productIndex = editedData.findIndex((p) => p.id === productId);
+    const productIndex = storedData.findIndex((p) => p.id === productId);
 
     if (productIndex !== -1) {
-      const product = editedData[productIndex];
+      const product = storedData[productIndex];
 
       if (!variantName) {
         // If the field is not related to variants, update it directly in the product
@@ -121,10 +116,10 @@ const ProductList1 = () => {
       }
 
       // Update the product in the array
-      editedData[productIndex] = product;
+      storedData[productIndex] = product;
 
-      // Save the edited data back to local storage
-      localStorage.setItem("originalData", JSON.stringify(editedData));
+      // Save the data back to local storage
+      saveDataToLocalStorage(storedData);
     }
   };
 
