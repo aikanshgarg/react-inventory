@@ -308,7 +308,7 @@ const ProductList = () => {
                                       }
                                     >
                                       {`$${variant.price}`}
-                                    </EditableField>
+                                    </EditableField>{" "}
                                     (
                                     <EditableField
                                       onSave={(value) =>
@@ -349,7 +349,7 @@ const ProductList = () => {
                                         >
                                           {secondaryVariant.name}
                                         </EditableField>
-                                        :
+                                        :{" "}
                                         <EditableField
                                           onSave={(value) =>
                                             handleEditSave(
@@ -361,8 +361,8 @@ const ProductList = () => {
                                             )
                                           }
                                         >
-                                          {`$${secondaryVariant.price}`}
-                                        </EditableField>
+                                          {` $${secondaryVariant.price}`}
+                                        </EditableField>{" "}
                                         (
                                         <EditableField
                                           onSave={(value) =>
