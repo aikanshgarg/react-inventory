@@ -1,16 +1,11 @@
 /* COLOR PALETTE =>
 $primary-brand-color: #0b0c22;
 $secondary-brand-color: #ef3346;
-$pink-color: #de9cee;
 $blue-color: #357fef;
 $purple-color: #d37ce9;
 $grey-color: #847cb3;
-$light-grey-card-color: #f1f5f9;
-$black-text-color: #1e1a37; */
 
 /* TYPOGRAPHY =>
-$heading-font-family: "Tiempos Fine Regular", sans-serif;
-$body-font-family: "Aileron Regular", sans-serif; 
 font-family: 'EB Garamond', serif;
 font-family: 'Manrope', sans-serif;
 font-family: 'Poppins', sans-serif;
@@ -99,7 +94,6 @@ font-family: 'Poppins', sans-serif;
 }
 
 thead tr th.header {
-  /* font-family: "Poppins", sans-serif; */
   font-family: "Space Grotesk", sans-serif;
   font-size: 1rem;
   color: #333;
