@@ -211,7 +211,7 @@ const ProductList = () => {
         <TableBody>
           {products.map((product) => (
             <TableRow key={product.id}>
-              <TableCell style={{ width: "40%" }}>
+              <TableCell style={{ width: "40%", padding: "40px 20px" }}>
                 <Accordion
                   expanded={expanded === `panel${product.id}`}
                   onChange={handleAccordionChange(`panel${product.id}`)}

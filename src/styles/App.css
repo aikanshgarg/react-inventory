@@ -25,6 +25,16 @@ font-family: 'Poppins', sans-serif;
   background-color: #0b0c22;
 }
 
+.info-text {
+  color: #847cb3;
+  text-align: center;
+  padding-bottom: 40px;
+}
+.info-text a {
+  color: #d37ce9;
+  text-decoration: none;
+}
+
 .table-container.MuiPaper-root {
   background-color: #f1f5f9;
   border-radius: 4px;
@@ -89,11 +99,13 @@ font-family: 'Poppins', sans-serif;
 }
 
 thead tr th.header {
-  font-family: "Poppins", sans-serif;
+  /* font-family: "Poppins", sans-serif; */
+  font-family: "Space Grotesk", sans-serif;
   font-size: 1rem;
   color: #333;
   font-weight: 500;
   background-color: #fff;
+  border-bottom: none;
 }
 
 tbody.MuiTableBody-root tr td {
@@ -101,11 +113,13 @@ tbody.MuiTableBody-root tr td {
   color: #1e1a37;
   font-weight: 500;
   font-size: 1rem;
+  border-bottom: none;
 }
 
 .MuiPaper-root.product-card {
   background-color: #fff;
   color: #0b0c22;
+  box-shadow: none;
 }
 .MuiAccordionSummary-content {
   align-items: center;
@@ -113,7 +127,8 @@ tbody.MuiTableBody-root tr td {
   position: relative;
 }
 .MuiTypography-root.product-title {
-  font-family: "Poppins", sans-serif;
+  /* font-family: "Poppins", sans-serif; */
+  font-family: "Space Grotesk", sans-serif;
   padding: 10px 60px 10px 10px;
 }
 
