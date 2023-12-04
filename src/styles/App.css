@@ -120,7 +120,7 @@ tbody.MuiTableBody-root tr td {
   background-color: #fff;
   color: #0b0c22;
   box-shadow: none;
-  padding: 0 10px;
+  padding: 10px;
 }
 .MuiAccordionSummary-content {
   align-items: center;
@@ -132,9 +132,21 @@ tbody.MuiTableBody-root tr td {
   padding: 10px 60px 10px 10px;
   font-weight: 500;
 }
+.MuiAccordionSummary-content.MuiAccordionSummary-contentGutters {
+  margin-top: 0;
+}
+.MuiAccordionSummary-content.Mui-expanded.MuiAccordionSummary-contentGutters {
+  margin: 0;
+}
 
 div p.MuiTypography-root {
   font-family: "Space Grotesk", sans-serif;
+}
+div p.MuiTypography-root.bold-text {
+  font-weight: 500;
+}
+.description {
+  padding-top: 20px;
 }
 .subheading {
   font-weight: 500 !important;

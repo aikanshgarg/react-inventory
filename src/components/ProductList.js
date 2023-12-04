@@ -211,7 +211,7 @@ const ProductList = () => {
         <TableBody>
           {products.map((product) => (
             <TableRow key={product.id}>
-              <TableCell style={{ width: "40%", padding: "40px 20px" }}>
+              <TableCell style={{ width: "40%" }}>
                 <Accordion
                   expanded={expanded === `panel${product.id}`}
                   onChange={handleAccordionChange(`panel${product.id}`)}
@@ -282,7 +282,7 @@ const ProductList = () => {
                             >
                               <AccordionSummary style={{ paddingLeft: "10px" }}>
                                 <div style={{ margin: "0" }}>
-                                  <Typography>
+                                  <Typography className="bold-text">
                                     <EditableField
                                       onSave={(value) =>
                                         handleEditSave(
@@ -347,7 +347,9 @@ const ProductList = () => {
                                             )
                                           }
                                         >
-                                          {secondaryVariant.name}
+                                          <span style={{ fontWeight: "500" }}>
+                                            {secondaryVariant.name}
+                                          </span>
                                         </EditableField>
                                         :{" "}
                                         <EditableField
