@@ -179,7 +179,29 @@ button.edit-icon {
   align-items: center;
   font-family: "poppins", serif;
   font-size: 14px;
+  margin-right: 16px;
 }
+
+button.is-editing {
+  outline: none;
+  cursor: pointer;
+  border: none;
+  background: transparent;
+  color: #1c00de;
+  font-family: "poppins", serif;
+  font-size: 14px;
+}
+button.is-editing:hover {
+  text-decoration: underline;
+}
+
+.edit-input {
+  font-family: "Space Grotesk", sans-serif;
+  border: 1px solid #357fef;
+  font-size: 1rem;
+  color: #0b0c22;
+}
+
 button.edit-icon svg {
   font-size: 20px;
 }
@@ -202,10 +224,7 @@ ul {
   padding: 0;
   margin-top: 0;
 }
-li {
-  display: flex;
-  justify-content: space-between;
-}
+
 li:not(:last-child) {
   margin-bottom: 12px;
 }

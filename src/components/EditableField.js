@@ -32,9 +32,22 @@ const EditableField = ({ onSave, children }) => {
             value={editedContent}
             onChange={handleChange}
             onBlur={handleSave}
+            className="edit-input"
           />
-          <button onClick={handleSave}>Save</button>
-          <button onClick={handleCancel}>Cancel</button>
+          <button
+            onClick={handleSave}
+            className="is-editing"
+            style={{ color: "forestgreen" }}
+          >
+            Save
+          </button>
+          <button
+            onClick={handleCancel}
+            className="is-editing"
+            style={{ color: "#7e88c3" }}
+          >
+            Cancel
+          </button>
         </>
       ) : (
         <>

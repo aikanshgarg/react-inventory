@@ -299,6 +299,8 @@ const ProductList = () => {
                                     </EditableField>
                                   </Typography>
                                   <Typography>
+                                    <LocalOfferOutlinedIcon className="price-icon" />
+                                    $
                                     <EditableField
                                       onSave={(value) =>
                                         handleEditSave(
@@ -309,9 +311,9 @@ const ProductList = () => {
                                         )
                                       }
                                     >
-                                      <LocalOfferOutlinedIcon className="price-icon" />
-                                      {`$${variant.price}`}
+                                      {variant.price}
                                     </EditableField>
+                                    <Inventory2OutlinedIcon className="inventory-icon" />
                                     <EditableField
                                       onSave={(value) =>
                                         handleEditSave(
@@ -322,11 +324,11 @@ const ProductList = () => {
                                         )
                                       }
                                     >
-                                      <Inventory2OutlinedIcon className="inventory-icon" />
                                       {variant.inventory}
                                     </EditableField>
                                   </Typography>
                                 </div>
+                                <ExpandMoreIcon />
                               </AccordionSummary>
                               <AccordionDetails
                                 style={{ padding: "0 0 20px 20px" }}
@@ -353,35 +355,37 @@ const ProductList = () => {
                                             {secondaryVariant.name}
                                           </span>
                                         </EditableField>
-
-                                        <EditableField
-                                          onSave={(value) =>
-                                            handleEditSave(
-                                              "price",
-                                              value,
-                                              product.id,
-                                              variant.name,
-                                              secondaryVariant.name
-                                            )
-                                          }
-                                        >
+                                        <div>
                                           <LocalOfferOutlinedIcon className="price-icon" />
-                                          {`$${secondaryVariant.price}`}
-                                        </EditableField>
-                                        <EditableField
-                                          onSave={(value) =>
-                                            handleEditSave(
-                                              "inventory",
-                                              value,
-                                              product.id,
-                                              variant.name,
-                                              secondaryVariant.name
-                                            )
-                                          }
-                                        >
+                                          $
+                                          <EditableField
+                                            onSave={(value) =>
+                                              handleEditSave(
+                                                "price",
+                                                value,
+                                                product.id,
+                                                variant.name,
+                                                secondaryVariant.name
+                                              )
+                                            }
+                                          >
+                                            {secondaryVariant.price}
+                                          </EditableField>
                                           <Inventory2OutlinedIcon className="inventory-icon" />
-                                          {secondaryVariant.inventory}
-                                        </EditableField>
+                                          <EditableField
+                                            onSave={(value) =>
+                                              handleEditSave(
+                                                "inventory",
+                                                value,
+                                                product.id,
+                                                variant.name,
+                                                secondaryVariant.name
+                                              )
+                                            }
+                                          >
+                                            {secondaryVariant.inventory}
+                                          </EditableField>
+                                        </div>
                                       </li>
                                     )
                                   )}
@@ -413,7 +417,7 @@ const ProductList = () => {
                     handleEditSave("discountPercentage", value, product.id)
                   }
                 >
-                  {product.discountPercentage}%
+                  {`${product.discountPercentage}%`}
                 </EditableField>
               </TableCell>
               <TableCell>
