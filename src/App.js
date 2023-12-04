@@ -1,4 +1,4 @@
-import "./App.css";
+import "./styles/App.css";
 import ProductList from "./components/ProductList.js";
 
 function App() {

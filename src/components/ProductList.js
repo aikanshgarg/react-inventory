@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from "react";
+
 import {
   Table,
   TableBody,
@@ -13,10 +14,16 @@ import {
   Typography,
   Box,
 } from "@mui/material";
+
+import SearchIcon from "@mui/icons-material/Search";
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
+
 import { fetchProducts } from "../services/api.js";
 
 import EditableField from "./EditableField.js";
+
+import "../styles/Navbar.css";
+import Navbar from "./Navbar.js";
 
 const ProductList = () => {
   const [expanded, setExpanded] = useState(false);
@@ -172,10 +179,27 @@ const ProductList = () => {
 
   return (
     <TableContainer component={Paper} className="table-container">
+      <Navbar />
       <Table>
         <TableHead>
           <TableRow>
-            <TableCell className="header">Title</TableCell>
+            <div
+              className="header"
+              style={{
+                background: "#fff",
+                display: "flex",
+                padding: "0 20px 20px",
+              }}
+            >
+              <div className="search-bar">
+                <SearchIcon />
+                <input
+                  type="text"
+                  placeholder="Search all orders"
+                  className="search-input"
+                />
+              </div>
+            </div>
             <TableCell className="header">WHS</TableCell>
             <TableCell className="header">Discount %</TableCell>
             <TableCell className="header">Colors</TableCell>

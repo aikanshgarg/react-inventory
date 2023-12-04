@@ -30,6 +30,29 @@ font-family: 'Poppins', sans-serif;
   border-radius: 4px;
 }
 
+/* Search Bar Styles */
+.search-bar {
+  width: 50%;
+  display: flex;
+  align-items: center;
+  background-color: #fff;
+  padding: 8px 16px;
+  border-radius: 2px;
+  border: 1px solid #847cb3;
+  border-top: none;
+}
+.search-bar svg {
+  color: #847cb3;
+}
+
+.search-input {
+  border: none;
+  outline: none;
+  margin-left: 8px;
+  width: 100%;
+  color: #847cb3;
+}
+
 .active-pill {
   background-color: #65d399;
   border-radius: 16px;
