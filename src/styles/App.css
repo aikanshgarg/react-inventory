@@ -129,8 +129,9 @@ tbody.MuiTableBody-root tr td {
 }
 .MuiTypography-root.product-title {
   font-family: "Space Grotesk", sans-serif;
-  padding: 10px 60px 10px 10px;
+  padding: 10px 20px 10px 10px;
   font-weight: 500;
+  text-wrap: balance;
 }
 .MuiAccordionSummary-content.MuiAccordionSummary-contentGutters {
   margin-top: 0;
@@ -153,10 +154,57 @@ div p.MuiTypography-root.bold-text {
   color: #7e88c3;
 }
 
+.content-with-edit-box {
+  display: flex;
+  align-items: flex-end;
+  justify-content: center;
+  cursor: pointer;
+  position: relative;
+}
+.edit-icon {
+  opacity: 0;
+  transition: opacity 0.3s ease;
+}
+.content-with-edit-box:hover .edit-icon {
+  opacity: 1;
+}
+
+button.edit-icon {
+  outline: none;
+  cursor: pointer;
+  border: none;
+  background: transparent;
+  color: #1c00de;
+  display: flex;
+  align-items: center;
+  font-family: "poppins", serif;
+  font-size: 14px;
+}
+button.edit-icon svg {
+  font-size: 20px;
+}
+
+.price-icon {
+  color: #ef3346;
+}
+.inventory-icon {
+  color: #d37ce9;
+}
+.MuiSvgIcon-fontSizeMedium.price-icon,
+.MuiSvgIcon-fontSizeMedium.inventory-icon {
+  font-size: 16px;
+  margin-bottom: -2px;
+  padding-right: 2px;
+}
+
 ul {
   list-style: none;
   padding: 0;
   margin-top: 0;
+}
+li {
+  display: flex;
+  justify-content: space-between;
 }
 li:not(:last-child) {
   margin-bottom: 12px;

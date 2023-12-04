@@ -17,6 +17,8 @@ import {
 
 import SearchIcon from "@mui/icons-material/Search";
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
+import LocalOfferOutlinedIcon from "@mui/icons-material/LocalOfferOutlined";
+import Inventory2OutlinedIcon from "@mui/icons-material/Inventory2Outlined";
 
 import { fetchProducts } from "../services/api.js";
 
@@ -307,9 +309,9 @@ const ProductList = () => {
                                         )
                                       }
                                     >
+                                      <LocalOfferOutlinedIcon className="price-icon" />
                                       {`$${variant.price}`}
-                                    </EditableField>{" "}
-                                    (
+                                    </EditableField>
                                     <EditableField
                                       onSave={(value) =>
                                         handleEditSave(
@@ -320,9 +322,9 @@ const ProductList = () => {
                                         )
                                       }
                                     >
+                                      <Inventory2OutlinedIcon className="inventory-icon" />
                                       {variant.inventory}
-                                    </EditableField>{" "}
-                                    left)
+                                    </EditableField>
                                   </Typography>
                                 </div>
                               </AccordionSummary>
@@ -351,7 +353,7 @@ const ProductList = () => {
                                             {secondaryVariant.name}
                                           </span>
                                         </EditableField>
-                                        :{" "}
+
                                         <EditableField
                                           onSave={(value) =>
                                             handleEditSave(
@@ -363,9 +365,9 @@ const ProductList = () => {
                                             )
                                           }
                                         >
-                                          {` $${secondaryVariant.price}`}
-                                        </EditableField>{" "}
-                                        (
+                                          <LocalOfferOutlinedIcon className="price-icon" />
+                                          {`$${secondaryVariant.price}`}
+                                        </EditableField>
                                         <EditableField
                                           onSave={(value) =>
                                             handleEditSave(
@@ -377,9 +379,9 @@ const ProductList = () => {
                                             )
                                           }
                                         >
+                                          <Inventory2OutlinedIcon className="inventory-icon" />
                                           {secondaryVariant.inventory}
-                                        </EditableField>{" "}
-                                        left)
+                                        </EditableField>
                                       </li>
                                     )
                                   )}

@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import EditOutlinedIcon from "@mui/icons-material/EditOutlined";
 
 const EditableField = ({ onSave, children }) => {
   const [isEditing, setEditing] = useState(false);
@@ -37,10 +38,12 @@ const EditableField = ({ onSave, children }) => {
         </>
       ) : (
         <>
-          <span>{editedContent}</span>
-          <button onClick={handleEditClick} style={{ display: "none" }}>
-            Edit
-          </button>
+          <div className="content-with-edit-box">
+            <span>{editedContent}</span>
+            <button onClick={handleEditClick} className="edit-icon">
+              <EditOutlinedIcon /> Edit
+            </button>
+          </div>
         </>
       )}
     </div>
