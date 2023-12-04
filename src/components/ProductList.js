@@ -37,6 +37,7 @@ const ProductList = () => {
 
   useEffect(() => {
     fetchProductData();
+    // eslint-disable-next-line
   }, []);
 
   const fetchProductData = async () => {

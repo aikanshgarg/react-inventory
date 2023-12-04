@@ -20,11 +20,16 @@ function App() {
           <a
             href="https://docs.google.com/document/d/19AUvxUtQ2mPuqFrM7GP9VeivFyobqzYDUOSeFFAWokI/edit"
             target="_blank"
+            rel="noreferrer"
           >
             Andisor's frontend task
           </a>{" "}
           by{" "}
-          <a href="https://www.linkedin.com/in/aikansh-garg/" target="_blank">
+          <a
+            href="https://www.linkedin.com/in/aikansh-garg/"
+            target="_blank"
+            rel="noreferrer"
+          >
             Aikansh Garg.
           </a>
         </div>
