@@ -1,3 +1,7 @@
+html {
+  background-color: #0b0c22;
+}
+
 body {
   margin: 0;
   font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Roboto", "Oxygen",
@@ -5,4 +9,20 @@ body {
     sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+}
+
+#spinner {
+  background-color: #0b0c22;
+  height: 100vh;
+  display: block;
+  transition: all 0.2s ease;
+}
+#spinner img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  border-radius: inherit;
+  object-position: center;
+  object-fit: contain;
+  image-rendering: auto;
 }
