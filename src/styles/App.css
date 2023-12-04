@@ -86,7 +86,7 @@ font-family: 'Poppins', sans-serif;
   position: relative;
 }
 .category-pill {
-  background: #ef3346;
+  background-color: #0b0c22;
   font-size: 15px;
   text-align: center;
   text-transform: capitalize;
@@ -109,9 +109,9 @@ thead tr th.header {
 }
 
 tbody.MuiTableBody-root tr td {
-  font-family: "Manrope", sans-serif;
+  font-family: "Space Grotesk", sans-serif;
   color: #1e1a37;
-  font-weight: 500;
+  font-weight: 400;
   font-size: 1rem;
   border-bottom: none;
 }
@@ -120,6 +120,7 @@ tbody.MuiTableBody-root tr td {
   background-color: #fff;
   color: #0b0c22;
   box-shadow: none;
+  padding: 0 10px;
 }
 .MuiAccordionSummary-content {
   align-items: center;
@@ -127,14 +128,23 @@ tbody.MuiTableBody-root tr td {
   position: relative;
 }
 .MuiTypography-root.product-title {
-  /* font-family: "Poppins", sans-serif; */
   font-family: "Space Grotesk", sans-serif;
   padding: 10px 60px 10px 10px;
+  font-weight: 500;
+}
+
+div p.MuiTypography-root {
+  font-family: "Space Grotesk", sans-serif;
+}
+.subheading {
+  font-weight: 500 !important;
+  color: #7e88c3;
 }
 
 ul {
   list-style: none;
   padding: 0;
+  margin-top: 0;
 }
 li:not(:last-child) {
   margin-bottom: 12px;

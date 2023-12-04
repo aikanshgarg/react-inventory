@@ -233,7 +233,7 @@ const ProductList = () => {
                           width: "160px",
                           height: "160px",
                           objectFit: "contain",
-                          backgroundColor: "#fff",
+                          backgroundColor: "#f6faff",
                           border: "1px solid #0b0c22",
                           borderRadius: "50%",
                         }}
@@ -253,7 +253,7 @@ const ProductList = () => {
                   </AccordionSummary>
                   <AccordionDetails>
                     <div className="description">
-                      <span>Product Description: </span>
+                      <span className="subheading">Product Description: </span>
                       <EditableField
                         onSave={(value) =>
                           handleEditSave("description", value, product.id)
@@ -264,15 +264,24 @@ const ProductList = () => {
                     </div>
 
                     <div>
-                      <Typography>
+                      <Typography
+                        className="subheading"
+                        style={{ paddingLeft: "10px", marginTop: "20px" }}
+                      >
                         {product.primary_variant_name} Variants:
                       </Typography>
                       <ul>
                         {product.primary_variants.map((variant) => (
                           <li key={variant.name}>
-                            <Accordion>
-                              <AccordionSummary>
-                                <div>
+                            <Accordion
+                              style={{
+                                boxShadow: "none",
+                                borderBottom: "1px solid #847cb3",
+                                borderRadius: "0",
+                              }}
+                            >
+                              <AccordionSummary style={{ paddingLeft: "10px" }}>
+                                <div style={{ margin: "0" }}>
                                   <Typography>
                                     <EditableField
                                       onSave={(value) =>
@@ -317,8 +326,10 @@ const ProductList = () => {
                                   </Typography>
                                 </div>
                               </AccordionSummary>
-                              <AccordionDetails>
-                                <Typography>
+                              <AccordionDetails
+                                style={{ padding: "0 0 20px 20px" }}
+                              >
+                                <Typography className="subheading">
                                   {product.secondary_variant_name}s Available:
                                 </Typography>
                                 <ul>
