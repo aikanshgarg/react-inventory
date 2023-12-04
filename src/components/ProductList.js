@@ -105,7 +105,7 @@ const ProductList = () => {
         if (variantIndex !== -1) {
           if (!secondaryVariantName) {
             // If no secondaryVariantName, update the primary variant name
-            product.primary_variants[variantIndex].name = value;
+            product.primary_variants[variantIndex][field] = value;
           } else {
             // Find the secondary variant index in secondary_variants array
             const secondaryVariantIndex = product.primary_variants[
@@ -132,7 +132,6 @@ const ProductList = () => {
     }
   };
 
-  // Function to handle the save action for editable fields
   const handleEditSave = (
     field,
     value,
@@ -153,7 +152,6 @@ const ProductList = () => {
     console.log(`Save ${field} for product ${productId}: ${value}`);
   };
 
-  // Mapping function for sizes
   const mapSize = (size) => {
     const sizeMap = {
       Small: "S",
@@ -164,7 +162,6 @@ const ProductList = () => {
     return sizeMap[size] || size;
   };
 
-  // Mapping function for colors
   const mapColor = (color) => (
     <Box
       key={color}
