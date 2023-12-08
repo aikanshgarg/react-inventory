@@ -29,7 +29,11 @@ const EditableField = ({ onSave, children }) => {
         <>
           <input
             type="text"
-            value={editedContent}
+            value={
+              typeof editedContent === "object"
+                ? editedContent.props.children
+                : editedContent
+            }
             onChange={handleChange}
             onBlur={handleSave}
             className="edit-input"
@@ -52,7 +56,11 @@ const EditableField = ({ onSave, children }) => {
       ) : (
         <>
           <div className="content-with-edit-box">
-            <span>{editedContent}</span>
+            <span>
+              {typeof editedContent === "object"
+                ? editedContent.props.children
+                : editedContent}
+            </span>
             <button onClick={handleEditClick} className="edit-icon">
               <EditOutlinedIcon /> Edit
             </button>

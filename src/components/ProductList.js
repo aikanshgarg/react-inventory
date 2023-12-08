@@ -84,52 +84,55 @@ const ProductList = () => {
     variantName,
     secondaryVariantName
   ) => {
-    // Get the data from local storage
-    const storedData = getStoredDataFromLocalStorage();
+    // Update the state with the latest data
+    setProducts((prevProducts) => {
+      const updatedProducts = [...prevProducts];
+      const productIndex = updatedProducts.findIndex((p) => p.id === productId);
 
-    // Find the product in the array
-    const productIndex = storedData.findIndex((p) => p.id === productId);
+      if (productIndex !== -1) {
+        const product = { ...updatedProducts[productIndex] };
 
-    if (productIndex !== -1) {
-      const product = storedData[productIndex];
+        if (!variantName) {
+          // If the field is not related to variants, update it directly in the product
+          product[field] = value;
+        } else {
+          // Find the variant index in primary_variants array
+          const variantIndex = product.primary_variants.findIndex(
+            (v) => v.name === variantName
+          );
 
-      if (!variantName) {
-        // If the field is not related to variants, update it directly in the product
-        product[field] = value;
-      } else {
-        // Find the variant index in primary_variants array
-        const variantIndex = product.primary_variants.findIndex(
-          (v) => v.name === variantName
-        );
+          if (variantIndex !== -1) {
+            if (!secondaryVariantName) {
+              // If no secondaryVariantName, update the primary variant name
+              product.primary_variants[variantIndex][field] = value;
+            } else {
+              // Find the secondary variant index in secondary_variants array
+              const secondaryVariantIndex = product.primary_variants[
+                variantIndex
+              ].secondary_variants.findIndex(
+                (sv) => sv.name === secondaryVariantName
+              );
 
-        if (variantIndex !== -1) {
-          if (!secondaryVariantName) {
-            // If no secondaryVariantName, update the primary variant name
-            product.primary_variants[variantIndex][field] = value;
-          } else {
-            // Find the secondary variant index in secondary_variants array
-            const secondaryVariantIndex = product.primary_variants[
-              variantIndex
-            ].secondary_variants.findIndex(
-              (sv) => sv.name === secondaryVariantName
-            );
-
-            if (secondaryVariantIndex !== -1) {
-              // Update the field in the secondary variant
-              product.primary_variants[variantIndex].secondary_variants[
-                secondaryVariantIndex
-              ][field] = value;
+              if (secondaryVariantIndex !== -1) {
+                // Update the field in the secondary variant
+                product.primary_variants[variantIndex].secondary_variants[
+                  secondaryVariantIndex
+                ][field] = value;
+              }
             }
           }
         }
+
+        // Update the product in the array
+        updatedProducts[productIndex] = product;
       }
 
-      // Update the product in the array
-      storedData[productIndex] = product;
-
       // Save the data back to local storage
-      saveDataToLocalStorage(storedData);
-    }
+      saveDataToLocalStorage(updatedProducts);
+
+      // Return the updated state
+      return updatedProducts;
+    });
   };
 
   const handleEditSave = (
