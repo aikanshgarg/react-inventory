@@ -16,22 +16,35 @@ function App() {
     !loading && (
       <div className="App">
         <div className="info-text">
-          Assignment submission of{" "}
-          <a
-            href="https://docs.google.com/document/d/19AUvxUtQ2mPuqFrM7GP9VeivFyobqzYDUOSeFFAWokI/edit"
-            target="_blank"
-            rel="noreferrer"
-          >
-            Andisor's frontend task
-          </a>{" "}
-          by{" "}
-          <a
-            href="https://www.linkedin.com/in/aikansh-garg/"
-            target="_blank"
-            rel="noreferrer"
-          >
-            Aikansh Garg.
-          </a>
+          <p>
+            Assignment submission of{" "}
+            <a
+              href="https://docs.google.com/document/d/19AUvxUtQ2mPuqFrM7GP9VeivFyobqzYDUOSeFFAWokI/edit"
+              target="_blank"
+              rel="noreferrer"
+            >
+              Andisor's frontend task
+            </a>{" "}
+            by{" "}
+            <a
+              href="https://aikanshgarg.github.io"
+              target="_blank"
+              rel="noreferrer"
+            >
+              Aikansh Garg.
+            </a>
+          </p>
+          <p>
+            Readme and the code can be accessed at my{" "}
+            <a
+              href="https://github.com/aikanshgarg/react-inventory"
+              target="_blank"
+              rel="noreferrer"
+            >
+              GitHub repo
+            </a>
+            .
+          </p>
         </div>
 
         <ProductList />
